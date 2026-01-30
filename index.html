@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Онлайн Демо-Банк | Регистрация и Переводы</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        header {
+            background-color: #1a237e;
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: #4fc3f7;
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .balance {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #4fc3f7;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        .status-dot.online {
+            background-color: #00c853;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            background-color: #f5f5f5;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #555;
+        }
+
+        .tab-btn.active {
+            background-color: white;
+            color: #1a237e;
+            box-shadow: inset 0 3px 0 #4fc3f7;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: #e8eaf6;
+        }
+
+        .tab-content {
+            display: none;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: #1a237e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 i {
+            color: #4fc3f7;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4fc3f7;
+            outline: none;
+        }
+
+        .btn {
+            background-color: #1a237e;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            background-color: #283593;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-transfer {
+            background-color: #00c853;
+        }
+
+        .btn-transfer:hover {
+            background-color: #00e676;
+        }
+
+        .btn-clicker {
+            background-color: #ff9800;
+            font-size: 1.2rem;
+            padding: 20px;
+        }
+
+        .btn-clicker:hover {
+            background-color: #ffb74d;
+        }
+
+        .btn-login {
+            background-color: #2196f3;
+            width: 100%;
+        }
+
+        .btn-register {
+            background-color: #673ab7;
+            width: 100%;
+        }
+
+        .btn-logout {
+            background-color: #f44336;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .btn-logout:hover {
+            background-color: #ef5350;
+        }
+
+        .login-container {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .login-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-tab.active {
+            background-color: white;
+            color: #1a237e;
+            box-shadow: inset 0 3px 0 #4fc3f7;
+        }
+
+        .login-form {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .login-form.active {
+            display: flex;
+        }
+
+        .server-settings {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .server-settings h4 {
+            margin-bottom: 15px;
+            color: #1a237e;
+        }
+
+        .clicker-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .clicker-income {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ff9800;
+            margin: 10px 0;
+        }
+
+        .clicker-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px dashed #eee;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a237e;
+        }
+
+        .stat-label {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .clicker-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 350px;
+            background: linear-gradient(135deg, #fef3e4 0%, #fff8e1 100%);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clicker-coin {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: gold;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .upgrades {
+            margin-top: 30px;
+        }
+
+        .upgrade-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .upgrade-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #ff9800;
+        }
+
+        .upgrade-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .upgrade-info p {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .upgrade-price {
+            font-weight: 700;
+            color: #1a237e;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+
+        .btn-upgrade {
+            background-color: #ff9800;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        .btn-upgrade:hover {
+            background-color: #ffb74d;
+        }
+
+        .btn-upgrade:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .online-users {
+            margin-top: 30px;
+        }
+
+        .users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .user-balance {
+            color: #1a237e;
+            font-weight: 600;
+        }
+
+        .user-online {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        .user-online.active {
+            background-color: #00c853;
+        }
+
+        .transactions {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #1a237e;
+        }
+
+        .transaction-item.outgoing {
+            border-left-color: #f44336;
+        }
+
+        .transaction-item.clicker-income {
+            border-left-color: #ff9800;
+        }
+
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .transaction-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .transaction-date {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .transaction-amount {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .incoming {
+            color: #00c853;
+        }
+
+        .outgoing {
+            color: #f44336;
+        }
+
+        .clicker-income-color {
+            color: #ff9800;
+        }
+
+        .no-transactions {
+            text-align: center;
+            color: #777;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #00c853;
+            color: white;
+            padding: 18px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s, opacity 0.4s;
+            z-index: 100;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.error {
+            background-color: #f44336;
+        }
+
+        .notification.info {
+            background-color: #2196f3;
+        }
+
+        .notification.warning {
+            background-color: #ff9800;
+        }
+
+        footer {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .user-info {
+                text-align: center;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+            
+            .balance {
+                font-size: 1.8rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .clicker-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <!-- Экран входа/регистрации (показывается сначала) -->
+        <div id="loginScreen" class="login-container">
+            <div class="card">
+                <h2 style="text-align: center; margin-bottom: 30px;">
+                    <i class="fas fa-university"></i> Онлайн Демо-Банк
+                </h2>
+                
+                <div class="login-tabs">
+                    <button class="login-tab active" id="loginTabBtn">Вход</button>
+                    <button class="login-tab" id="registerTabBtn">Регистрация</button>
+                </div>
+                
+                <form id="loginForm" class="login-form active">
+                    <div class="form-group">
+                        <label for="loginUsername">Имя пользователя</label>
+                        <input type="text" id="loginUsername" placeholder="Введите имя пользователя" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Пароль</label>
+                        <input type="password" id="loginPassword" placeholder="Введите пароль" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Войти
+                    </button>
+                </form>
+                
+                <form id="registerForm" class="login-form">
+                    <div class="form-group">
+                        <label for="registerUsername">Имя пользователя</label>
+                        <input type="text" id="registerUsername" placeholder="Придумайте имя пользователя" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Пароль</label>
+                        <input type="password" id="registerPassword" placeholder="Придумайте пароль" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Подтвердите пароль</label>
+                        <input type="password" id="registerConfirmPassword" placeholder="Повторите пароль" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-register">
+                        <i class="fas fa-user-plus"></i> Зарегистрироваться
+                    </button>
+                </form>
+                
+                <div class="server-settings">
+                    <h4><i class="fas fa-server"></i> Настройки сервера</h4>
+                    <div class="form-group">
+                        <label for="serverUrl">URL сервера</label>
+                        <input type="text" id="serverUrl" value="http://localhost:3000" placeholder="http://localhost:3000">
+                    </div>
+                    <div class="connection-status">
+                        <div class="status-dot" id="serverStatusDot"></div>
+                        <span id="serverStatusText">Не подключено</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основной интерфейс банка (скрыт до входа) -->
+        <div id="bankInterface" style="display: none;">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-university"></i>
+                    <h1>Онлайн Демо-Банк</h1>
+                </div>
+                <div class="user-info">
+                    <h2 id="currentUserName">Пользователь</h2>
+                    <p>Текущий баланс:</p>
+                    <div class="balance" id="balance">0 ₽</div>
+                    <div class="connection-status">
+                        <div class="status-dot" id="connectionStatusDot"></div>
+                        <span id="connectionStatusText">Подключение...</span>
+                    </div>
+                    <button class="btn btn-logout" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                </div>
+            </header>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="transfers">
+                    <i class="fas fa-exchange-alt"></i> Онлайн переводы
+                </button>
+                <button class="tab-btn" data-tab="clicker">
+                    <i class="fas fa-mouse-pointer"></i> Кликер
+                </button>
+                <button class="tab-btn" data-tab="history">
+                    <i class="fas fa-history"></i> История
+                </button>
+                <button class="tab-btn" data-tab="users">
+                    <i class="fas fa-users"></i> Онлайн пользователи
+                </button>
+            </div>
+
+            <!-- Вкладка переводов -->
+            <div class="tab-content active" id="transfersTab">
+                <div class="content-grid">
+                    <div class="card">
+                        <h3><i class="fas fa-money-check-alt"></i> Перевод средств</h3>
+                        <form class="transfer-form" id="transferForm">
+                            <div class="form-group">
+                                <label for="recipient">Получатель</label>
+                                <select id="recipient" required>
+                                    <option value="" disabled selected>Выберите получателя</option>
+                                    <!-- Список пользователей будет загружен динамически -->
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="amount">Сумма перевода (₽)</label>
+                                <input type="number" id="amount" min="1" placeholder="Введите сумму" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-transfer">
+                                <i class="fas fa-paper-plane"></i> Выполнить перевод
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class="fas fa-info-circle"></i> Информация</h3>
+                        <p>Вы можете переводить средства другим пользователям онлайн.</p>
+                        <p style="margin-top: 15px;">Обратите внимание:</p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Минимальная сумма перевода: 1 ₽</li>
+                            <li>Перевод невозможен при недостатке средств</li>
+                            <li>Все операции сохраняются в истории</li>
+                            <li>Для получения переводов пользователь должен быть онлайн</li>
+                        </ul>
+                        <div style="margin-top: 20px; padding: 15px; background-color: #f0f7ff; border-radius: 8px;">
+                            <p><strong>Как тестировать с друзьями:</strong></p>
+                            <ol style="margin-top: 10px; padding-left: 20px;">
+                                <li>Запустите сервер на своем компьютере</li>
+                                <li>Друзья должны использовать ваш IP-адрес и порт 3000</li>
+                                <li>Все должны быть в одной локальной сети</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка кликера -->
+            <div class="tab-content" id="clickerTab">
+                <div class="content-grid">
+                    <div class="card">
+                        <h3><i class="fas fa-mouse-pointer"></i> Заработок кликами</h3>
+                        <div class="clicker-info">
+                            <p>Кликайте по кнопке, чтобы зарабатывать деньги!</p>
+                            <div class="clicker-income" id="clickerIncome">+10 000 ₽ за клик</div>
+                            <p>Улучшайте свой доход с помощью апгрейдов</p>
+                        </div>
+                        
+                        <div class="clicker-container" id="clickerContainer">
+                            <button class="btn btn-clicker" id="clickerBtn">
+                                <i class="fas fa-coins"></i> КЛИКАЙ ДЛЯ ЗАРАБОТКА
+                            </button>
+                        </div>
+                        
+                        <div class="clicker-stats">
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalClicks">0</div>
+                                <div class="stat-label">Всего кликов</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalEarned">0 ₽</div>
+                                <div class="stat-label">Заработано</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="incomePerClick">10 000 ₽</div>
+                                <div class="stat-label">Доход за клик</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class="fas fa-arrow-up"></i> Улучшения</h3>
+                        <p class="upgrade-description">Покупайте улучшения для увеличения дохода за клик:</p>
+                        
+                        <div class="upgrades">
+                            <div class="upgrade-list" id="upgradeList">
+                                <!-- Апгрейды будут добавляться через JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка истории -->
+            <div class="tab-content" id="historyTab">
+                <div class="card">
+                    <h3><i class="fas fa-history"></i> История операций</h3>
+                    <div class="transactions">
+                        <div class="transaction-list" id="transactionList">
+                            <!-- Транзакции будут добавляться здесь через JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка онлайн пользователей -->
+            <div class="tab-content" id="usersTab">
+                <div class="content-grid">
+                    <div class="card">
+                        <h3><i class="fas fa-users"></i> Онлайн пользователи</h3>
+                        <p>Список пользователей, подключенных к серверу:</p>
+                        
+                        <div class="online-users">
+                            <div class="users-list" id="onlineUsersList">
+                                <!-- Список пользователей будет загружен динамически -->
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 30px; padding: 15px; background-color: #f0f7ff; border-radius: 8px;">
+                            <p><strong>Как подключиться друзьям:</strong></p>
+                            <p>Друзья должны зайти по адресу: <span id="serverAddressDisplay">http://localhost:3000</span></p>
+                            <p style="margin-top: 10px;">Для доступа из интернета потребуется настройка проброса портов в роутере.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3><i class="fas fa-server"></i> Информация о сервере</h3>
+                        <div class="form-group">
+                            <label>Текущий URL сервера</label>
+                            <input type="text" id="currentServerUrl" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Статус подключения</label>
+                            <div class="connection-status">
+                                <div class="status-dot" id="serverInfoStatusDot"></div>
+                                <span id="serverInfoStatusText">Не подключено</span>
+                            </div>
+                        </div>
+                        
+                        <button class="btn" id="reconnectBtn" style="margin-top: 20px;">
+                            <i class="fas fa-sync-alt"></i> Переподключиться
+                        </button>
+                        
+                        <div style="margin-top: 30px; padding: 15px; background-color: #fff8e1; border-radius: 8px;">
+                            <p><strong>Инструкция по запуску сервера:</strong></p>
+                            <ol style="margin-top: 10px; padding-left: 20px;">
+                                <li>Скачайте файл server.js</li>
+                                <li>Установите Node.js если не установлен</li>
+                                <li>В командной строке выполните: <code>node server.js</code></li>
+                                <li>Сервер запустится на порту 3000</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer>
+                <p>© 2023 Онлайн Демо-Банк. Это учебный проект для демонстрации работы банковских операций с онлайн-переводами.</p>
+                <p>Серверная часть требует запуска отдельного сервера на Node.js.</p>
+            </footer>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Уведомление</span>
+    </div>
+
+    <script>
+        // Глобальные переменные
+        let currentUser = null;
+        let socket = null;
+        let isOnlineMode = false;
+        let serverUrl = "http://localhost:3000";
+        let reconnectionAttempts = 0;
+        const maxReconnectionAttempts = 5;
+        
+        // Данные кликера (хранятся локально даже в онлайн-режиме)
+        let clickerData = {
+            totalClicks: 0,
+            totalEarned: 0,
+            incomePerClick: 10000,
+            upgrades: [
+                {
+                    id: 1,
+                    name: "Улучшенная мышь",
+                    description: "Увеличивает доход за клик на 5 000 ₽",
+                    price: 50000,
+                    incomeIncrease: 5000,
+                    purchased: false
+                },
+                {
+                    id: 2,
+                    name: "Золотая кнопка",
+                    description: "Увеличивает доход за клик на 15 000 ₽",
+                    price: 150000,
+                    incomeIncrease: 15000,
+                    purchased: false
+                },
+                {
+                    id: 3,
+                    name: "Автокликер",
+                    description: "Увеличивает доход за клик на 30 000 ₽",
+                    price: 300000,
+                    incomeIncrease: 30000,
+                    purchased: false
+                },
+                {
+                    id: 4,
+                    name: "Банковский бот",
+                    description: "Увеличивает доход за клик на 50 000 ₽",
+                    price: 500000,
+                    incomeIncrease: 50000,
+                    purchased: false
+                },
+                {
+                    id: 5,
+                    name: "ИИ-помощник",
+                    description: "Увеличивает доход за клик на 100 000 ₽",
+                    price: 1000000,
+                    incomeIncrease: 100000,
+                    purchased: false
+                }
+            ]
+        };
+        
+        // Локальные пользователи (для оффлайн режима)
+        let localUsers = JSON.parse(localStorage.getItem('demoBankUsers')) || [];
+        
+        // Элементы DOM
+        const loginScreen = document.getElementById('loginScreen');
+        const bankInterface = document.getElementById('bankInterface');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginTabBtn = document.getElementById('loginTabBtn');
+        const registerTabBtn = document.getElementById('registerTabBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const currentUserName = document.getElementById('currentUserName');
+        const balanceElement = document.getElementById('balance');
+        const transferForm = document.getElementById('transferForm');
+        const transactionList = document.getElementById('transactionList');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        const serverUrlInput = document.getElementById('serverUrl');
+        const currentServerUrlInput = document.getElementById('currentServerUrl');
+        const serverAddressDisplay = document.getElementById('serverAddressDisplay');
+        const reconnectBtn = document.getElementById('reconnectBtn');
+        
+        // Элементы кликера
+        const clickerBtn = document.getElementById('clickerBtn');
+        const clickerContainer = document.getElementById('clickerContainer');
+        const totalClicksElement = document.getElementById('totalClicks');
+        const totalEarnedElement = document.getElementById('totalEarned');
+        const incomePerClickElement = document.getElementById('incomePerClick');
+        const clickerIncomeElement = document.getElementById('clickerIncome');
+        const upgradeListElement = document.getElementById('upgradeList');
+        
+        // Элементы статуса
+        const serverStatusDot = document.getElementById('serverStatusDot');
+        const serverStatusText = document.getElementById('serverStatusText');
+        const connectionStatusDot = document.getElementById('connectionStatusDot');
+        const connectionStatusText = document.getElementById('connectionStatusText');
+        const serverInfoStatusDot = document.getElementById('serverInfoStatusDot');
+        const serverInfoStatusText = document.getElementById('serverInfoStatusText');
+        
+        // Элементы вкладок
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Форматирование чисел как денежных значений
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('ru-RU', {
+                style: 'currency',
+                currency: 'RUB',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+        
+        // Форматирование даты
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // Показать уведомление
+        function showNotification(message, type = 'success') {
+            notificationText.textContent = message;
+            
+            notification.className = 'notification';
+            
+            switch(type) {
+                case 'error':
+                    notification.classList.add('error');
+                    notification.querySelector('i').className = 'fas fa-exclamation-circle';
+                    break;
+                case 'info':
+                    notification.classList.add('info');
+                    notification.querySelector('i').className = 'fas fa-info-circle';
+                    break;
+                case 'warning':
+                    notification.classList.add('warning');
+                    notification.querySelector('i').className = 'fas fa-exclamation-triangle';
+                    break;
+                default:
+                    notification.querySelector('i').className = 'fas fa-check-circle';
+                    break;
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Обновление статуса подключения
+        function updateConnectionStatus(isConnected) {
+            if (isConnected) {
+                connectionStatusDot.className = 'status-dot online';
+                connectionStatusText.textContent = 'Подключено к серверу';
+                serverInfoStatusDot.className = 'status-dot online';
+                serverInfoStatusText.textContent = 'Подключено';
+            } else {
+                connectionStatusDot.className = 'status-dot';
+                connectionStatusText.textContent = 'Не подключено';
+                serverInfoStatusDot.className = 'status-dot';
+                serverInfoStatusText.textContent = 'Не подключено';
+            }
+        }
+        
+        // Подключение к серверу
+        function connectToServer() {
+            serverUrl = serverUrlInput.value.trim();
+            
+            if (!serverUrl) {
+                showNotification('Введите URL сервера', 'error');
+                return;
+            }
+            
+            // Сохраняем URL сервера
+            localStorage.setItem('demoBankServerUrl', serverUrl);
+            currentServerUrlInput.value = serverUrl;
+            serverAddressDisplay.textContent = serverUrl;
+            
+            // Обновляем статус
+            serverStatusDot.className = 'status-dot';
+            serverStatusText.textContent = 'Подключение...';
+            
+            // Пытаемся подключиться к серверу
+            try {
+                // В реальном приложении здесь будет подключение через Socket.io
+                // Для демо просто проверяем доступность сервера
+                checkServerAvailability();
+            } catch (error) {
+                console.error('Ошибка подключения:', error);
+                serverStatusDot.className = 'status-dot';
+                serverStatusText.textContent = 'Ошибка подключения';
+                showNotification('Не удалось подключиться к серверу', 'error');
+            }
+        }
+        
+        // Проверка доступности сервера
+        function checkServerAvailability() {
+            fetch(`${serverUrl}/health`)
+                .then(response => {
+                    if (response.ok) {
+                        serverStatusDot.className = 'status-dot online';
+                        serverStatusText.textContent = 'Сервер доступен';
+                        updateConnectionStatus(true);
+                        isOnlineMode = true;
+                        showNotification('Подключено к серверу', 'success');
+                        
+                        // Загружаем онлайн пользователей
+                        loadOnlineUsers();
+                    } else {
+                        throw new Error('Сервер не отвечает');
+                    }
+                })
+                .catch(error => {
+                    serverStatusDot.className = 'status-dot';
+                    serverStatusText.textContent = 'Сервер недоступен';
+                    updateConnectionStatus(false);
+                    isOnlineMode = false;
+                    showNotification('Сервер недоступен. Работа в оффлайн режиме.', 'warning');
+                });
+        }
+        
+        // Загрузка онлайн пользователей
+        function loadOnlineUsers() {
+            if (!isOnlineMode) return;
+            
+            // В реальном приложении здесь будет запрос к серверу
+            // Для демо создаем имитацию
+            const onlineUsersList = document.getElementById('onlineUsersList');
+            onlineUsersList.innerHTML = '';
+            
+            // Имитируем получение списка пользователей
+            const mockUsers = [
+                { username: 'Александр', balance: 25000, online: true },
+                { username: 'Мария', balance: 150000, online: true },
+                { username: 'Иван', balance: 75000, online: false },
+                { username: 'Ольга', balance: 300000, online: true }
+            ];
+            
+            mockUsers.forEach(user => {
+                const userElement = document.createElement('div');
+                userElement.className = 'user-item';
+                userElement.innerHTML = `
+                    <div>
+                        <div class="user-name">${user.username}</div>
+                        <div style="font-size: 0.8rem; color: #777;">Баланс: ${formatCurrency(user.balance)}</div>
+                    </div>
+                    <div class="user-online ${user.online ? 'active' : ''}"></div>
+                `;
+                onlineUsersList.appendChild(userElement);
+            });
+            
+            // Также обновляем список получателей для переводов
+            updateRecipientsList(mockUsers.filter(u => u.online && u.username !== currentUser.username));
+        }
+        
+        // Обновление списка получателей
+        function updateRecipientsList(users) {
+            const recipientSelect = document.getElementById('recipient');
+            recipientSelect.innerHTML = '<option value="" disabled selected>Выберите получателя</option>';
+            
+            if (isOnlineMode) {
+                // Онлайн пользователи
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.username;
+                    option.textContent = `${user.username} (${formatCurrency(user.balance)})`;
+                    recipientSelect.appendChild(option);
+                });
+            } else {
+                // Локальные пользователи
+                localUsers.forEach(user => {
+                    if (user.username !== currentUser.username) {
+                        const option = document.createElement('option');
+                        option.value = user.username;
+                        option.textContent = `${user.username} (${formatCurrency(user.balance)})`;
+                        recipientSelect.appendChild(option);
+                    }
+                });
+            }
+        }
+        
+        // Регистрация нового пользователя
+        function registerUser(username, password) {
+            // Проверка, существует ли пользователь
+            const existingUser = localUsers.find(u => u.username === username);
+            
+            if (existingUser) {
+                showNotification('Пользователь с таким именем уже существует', 'error');
+                return false;
+            }
+            
+            if (password.length < 4) {
+                showNotification('Пароль должен содержать не менее 4 символов', 'error');
+                return false;
+            }
+            
+            // Создаем нового пользователя
+            const newUser = {
+                username,
+                password, // В реальном приложении пароль должен быть захеширован
+                balance: 25000,
+                transactions: [
+                    {
+                        id: 1,
+                        name: "Начальный бонус",
+                        date: new Date().toISOString(),
+                        amount: 25000,
+                        type: "incoming"
+                    }
+                ],
+                clickerData: {
+                    totalClicks: 0,
+                    totalEarned: 0,
+                    incomePerClick: 10000,
+                    upgrades: clickerData.upgrades.map(upgrade => ({...upgrade, purchased: false}))
+                }
+            };
+            
+            localUsers.push(newUser);
+            localStorage.setItem('demoBankUsers', JSON.stringify(localUsers));
+            
+            showNotification('Регистрация успешна! Вы получили начальный бонус 25 000 ₽', 'success');
+            return true;
+        }
+        
+        // Вход пользователя
+        function loginUser(username, password) {
+            // Поиск пользователя
+            const user = localUsers.find(u => u.username === username && u.password === password);
+            
+            if (!user) {
+                showNotification('Неверное имя пользователя или пароль', 'error');
+                return false;
+            }
+            
+            // Устанавливаем текущего пользователя
+            currentUser = user;
+            
+            // Восстанавливаем данные кликера
+            if (user.clickerData) {
+                clickerData = user.clickerData;
+            }
+            
+            // Обновляем интерфейс
+            updateUI();
+            
+            // Подключаемся к серверу если указан URL
+            if (serverUrlInput.value.trim()) {
+                connectToServer();
+            }
+            
+            showNotification(`Добро пожаловать, ${username}!`, 'success');
+            return true;
+        }
+        
+        // Обновление интерфейса
+        function updateUI() {
+            // Переключаем экраны
+            loginScreen.style.display = 'none';
+            bankInterface.style.display = 'block';
+            
+            // Обновляем информацию о пользователе
+            currentUserName.textContent = currentUser.username;
+            balanceElement.textContent = formatCurrency(currentUser.balance);
+            
+            // Обновляем статистику кликера
+            updateClickerStats();
+            
+            // Обновляем список получателей
+            updateRecipientsList();
+            
+            // Обновляем историю транзакций
+            renderTransactions();
+            
+            // Обновляем список улучшений
+            renderUpgrades();
+            
+            // Обновляем URL сервера
+            currentServerUrlInput.value = serverUrl;
+            serverAddressDisplay.textContent = serverUrl;
+        }
+        
+        // Обновление статистики кликера
+        function updateClickerStats() {
+            totalClicksElement.textContent = clickerData.totalClicks;
+            totalEarnedElement.textContent = formatCurrency(clickerData.totalEarned);
+            incomePerClickElement.textContent = formatCurrency(clickerData.incomePerClick);
+            clickerIncomeElement.textContent = `+${formatCurrency(clickerData.incomePerClick)} за клик`;
+        }
+        
+        // Отображение списка улучшений
+        function renderUpgrades() {
+            upgradeListElement.innerHTML = '';
+            
+            clickerData.upgrades.forEach(upgrade => {
+                const upgradeElement = document.createElement('div');
+                upgradeElement.className = 'upgrade-item';
+                
+                const purchased = upgrade.purchased;
+                
+                upgradeElement.innerHTML = `
+                    <div class="upgrade-info">
+                        <h4>${upgrade.name} ${purchased ? '<i class="fas fa-check" style="color:#00c853;"></i>' : ''}</h4>
+                        <p>${upgrade.description}</p>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div class="upgrade-price">${formatCurrency(upgrade.price)}</div>
+                        <button class="btn btn-upgrade" data-id="${upgrade.id}" ${purchased || currentUser.balance < upgrade.price ? 'disabled' : ''}>
+                            ${purchased ? 'Куплено' : 'Купить'}
+                        </button>
+                    </div>
+                `;
+                
+                upgradeListElement.appendChild(upgradeElement);
+            });
+            
+            // Добавляем обработчики для кнопок улучшений
+            document.querySelectorAll('.btn-upgrade').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const upgradeId = parseInt(this.getAttribute('data-id'));
+                    buyUpgrade(upgradeId);
+                });
+            });
+        }
+        
+        // Покупка улучшения
+        function buyUpgrade(upgradeId) {
+            const upgrade = clickerData.upgrades.find(u => u.id === upgradeId);
+            
+            if (!upgrade || upgrade.purchased) return;
+            
+            if (currentUser.balance >= upgrade.price) {
+                // Покупка улучшения
+                currentUser.balance -= upgrade.price;
+                upgrade.purchased = true;
+                clickerData.incomePerClick += upgrade.incomeIncrease;
+                
+                // Обновляем UI
+                balanceElement.textContent = formatCurrency(currentUser.balance);
+                updateClickerStats();
+                renderUpgrades();
+                
+                // Добавляем транзакцию
+                const newTransaction = {
+                    id: currentUser.transactions.length + 1,
+                    name: `Покупка: ${upgrade.name}`,
+                    date: new Date().toISOString(),
+                    amount: -upgrade.price,
+                    type: "outgoing"
+                };
+                
+                currentUser.transactions.push(newTransaction);
+                
+                // Сохраняем изменения
+                saveUserData();
+                
+                // Показываем уведомление
+                showNotification(`Улучшение "${upgrade.name}" куплено! Теперь вы получаете +${formatCurrency(upgrade.incomeIncrease)} за клик`, 'success');
+                
+                // Обновляем историю, если мы на вкладке истории
+                if (document.getElementById('historyTab').classList.contains('active')) {
+                    renderTransactions();
+                }
+            } else {
+                showNotification('Недостаточно средств для покупки улучшения', 'error');
+            }
+        }
+        
+        // Отображение списка транзакций
+        function renderTransactions() {
+            transactionList.innerHTML = '';
+            
+            if (!currentUser.transactions || currentUser.transactions.length === 0) {
+                transactionList.innerHTML = '<div class="no-transactions">Нет операций для отображения</div>';
+                return;
+            }
+            
+            // Сортируем транзакции по дате (сначала новые)
+            const sortedTransactions = [...currentUser.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            sortedTransactions.forEach(transaction => {
+                const transactionElement = document.createElement('div');
+                
+                // Определяем тип транзакции для стилизации
+                let transactionTypeClass = '';
+                if (transaction.name.includes('Кликер')) {
+                    transactionTypeClass = 'clicker-income';
+                } else if (transaction.type === 'outgoing') {
+                    transactionTypeClass = 'outgoing';
+                }
+                
+                transactionElement.className = `transaction-item ${transactionTypeClass}`;
+                
+                // Определяем класс для суммы
+                let amountClass = 'incoming';
+                let amountSign = '+';
+                if (transaction.amount < 0) {
+                    amountClass = transaction.name.includes('Кликер') ? 'clicker-income-color' : 'outgoing';
+                    amountSign = '';
+                }
+                
+                transactionElement.innerHTML = `
+                    <div class="transaction-details">
+                        <div class="transaction-name">${transaction.name}</div>
+                        <div class="transaction-date">${formatDate(transaction.date)}</div>
+                    </div>
+                    <div class="transaction-amount ${amountClass}">${amountSign}${formatCurrency(transaction.amount)}</div>
+                `;
+                
+                transactionList.appendChild(transactionElement);
+            });
+        }
+        
+        // Сохранение данных пользователя
+        function saveUserData() {
+            // Обновляем данные кликера
+            currentUser.clickerData = clickerData;
+            
+            // Находим индекс пользователя в массиве
+            const userIndex = localUsers.findIndex(u => u.username === currentUser.username);
+            
+            if (userIndex !== -1) {
+                localUsers[userIndex] = currentUser;
+                localStorage.setItem('demoBankUsers', JSON.stringify(localUsers));
+            }
+        }
+        
+        // Обработка перевода
+        function handleTransfer(event) {
+            event.preventDefault();
+            
+            const recipientName = document.getElementById('recipient').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            
+            // Проверка ввода
+            if (!recipientName) {
+                showNotification('Выберите получателя перевода', 'error');
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                showNotification('Введите корректную сумму перевода', 'error');
+                return;
+            }
+            
+            if (amount > currentUser.balance) {
+                showNotification('Недостаточно средств на счете', 'error');
+                return;
+            }
+            
+            // Находим получателя
+            const recipient = localUsers.find(u => u.username === recipientName);
+            
+            if (!recipient) {
+                showNotification('Получатель не найден', 'error');
+                return;
+            }
+            
+            // Выполняем перевод
+            currentUser.balance -= amount;
+            recipient.balance += amount;
+            
+            // Добавляем транзакции
+            const senderTransaction = {
+                id: currentUser.transactions.length + 1,
+                name: `Перевод: ${recipientName}`,
+                date: new Date().toISOString(),
+                amount: -amount,
+                type: "outgoing"
+            };
+            
+            const recipientTransaction = {
+                id: recipient.transactions.length + 1,
+                name: `Перевод от: ${currentUser.username}`,
+                date: new Date().toISOString(),
+                amount: amount,
+                type: "incoming"
+            };
+            
+            currentUser.transactions.push(senderTransaction);
+            recipient.transactions.push(recipientTransaction);
+            
+            // Сохраняем изменения
+            saveUserData();
+            
+            // Обновляем получателя в массиве
+            const recipientIndex = localUsers.findIndex(u => u.username === recipientName);
+            localUsers[recipientIndex] = recipient;
+            localStorage.setItem('demoBankUsers', JSON.stringify(localUsers));
+            
+            // Обновляем UI
+            balanceElement.textContent = formatCurrency(currentUser.balance);
+            
+            // Если онлайн режим, имитируем отправку на сервер
+            if (isOnlineMode) {
+                showNotification(`Онлайн перевод ${formatCurrency(amount)} пользователю ${recipientName} выполнен!`, 'success');
+            } else {
+                showNotification(`Перевод ${formatCurrency(amount)} пользователю ${recipientName} выполнен!`, 'success');
+            }
+            
+            // Обновляем историю, если мы на вкладке истории
+            if (document.getElementById('historyTab').classList.contains('active')) {
+                renderTransactions();
+            }
+            
+            // Сбрасываем форму
+            transferForm.reset();
+        }
+        
+        // Обработка клика для заработка
+        function handleClickerClick() {
+            // Увеличиваем счетчики
+            clickerData.totalClicks++;
+            clickerData.totalEarned += clickerData.incomePerClick;
+            currentUser.balance += clickerData.incomePerClick;
+            
+            // Обновляем UI
+            balanceElement.textContent = formatCurrency(currentUser.balance);
+            updateClickerStats();
+            
+            // Создаем анимацию монеты
+            createCoinAnimation();
+            
+            // Добавляем транзакцию
+            const newTransaction = {
+                id: currentUser.transactions.length + 1,
+                name: "Кликер: заработок",
+                date: new Date().toISOString(),
+                amount: clickerData.incomePerClick,
+                type: "incoming"
+            };
+            
+            currentUser.transactions.push(newTransaction);
+            
+            // Сохраняем изменения
+            saveUserData();
+            
+            // Обновляем историю, если мы на вкладке истории
+            if (document.getElementById('historyTab').classList.contains('active')) {
+                renderTransactions();
+            }
+            
+            // Показываем уведомление каждые 5 кликов
+            if (clickerData.totalClicks % 5 === 0) {
+                showNotification(`Отлично! Вы уже заработали ${formatCurrency(clickerData.totalEarned)} с помощью кликера!`, 'info');
+            }
+            
+            // Обновляем кнопки улучшений
+            renderUpgrades();
+        }
+        
+        // Создание анимации монеты
+        function createCoinAnimation() {
+            const coin = document.createElement('div');
+            coin.className = 'clicker-coin';
+            coin.textContent = `+${formatCurrency(clickerData.incomePerClick)}`;
+            
+            // Случайная позиция в области кликера
+            const containerRect = clickerContainer.getBoundingClientRect();
+            const x = Math.random() * (containerRect.width - 60);
+            const y = containerRect.height - 100;
+            
+            coin.style.left = `${x}px`;
+            coin.style.top = `${y}px`;
+            
+            clickerContainer.appendChild(coin);
+            
+            // Запускаем анимацию
+            setTimeout(() => {
+                coin.style.animation = 'floatUp 1.5s forwards';
+            }, 10);
+            
+            // Удаляем элемент после анимации
+            setTimeout(() => {
+                if (coin.parentNode) {
+                    coin.parentNode.removeChild(coin);
+                }
+            }, 1600);
+        }
+        
+        // Переключение вкладок
+        function switchTab(tabId) {
+            // Убираем активный класс у всех кнопок и контента
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Добавляем активный класс выбранной вкладке
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(`${tabId}Tab`).classList.add('active');
+            
+            // Если переключились на вкладку истории, обновляем список транзакций
+            if (tabId === 'history') {
+                renderTransactions();
+            }
+            
+            // Если переключились на вкладку пользователей, загружаем онлайн пользователей
+            if (tabId === 'users' && isOnlineMode) {
+                loadOnlineUsers();
+            }
+        }
+        
+        // Выход пользователя
+        function logout() {
+            currentUser = null;
+            loginScreen.style.display = 'block';
+            bankInterface.style.display = 'none';
+            
+            // Очищаем формы
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('registerUsername').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerConfirmPassword').value = '';
+            
+            showNotification('Вы успешно вышли из системы', 'info');
+        }
+        
+        // Инициализация приложения
+        function initApp() {
+            // Загружаем сохраненный URL сервера
+            const savedServerUrl = localStorage.getItem('demoBankServerUrl');
+            if (savedServerUrl) {
+                serverUrlInput.value = savedServerUrl;
+                serverUrl = savedServerUrl;
+            }
+            
+            // Обработчики вкладок входа/регистрации
+            loginTabBtn.addEventListener('click', () => {
+                loginTabBtn.classList.add('active');
+                registerTabBtn.classList.remove('active');
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+            });
+            
+            registerTabBtn.addEventListener('click', () => {
+                registerTabBtn.classList.add('active');
+                loginTabBtn.classList.remove('active');
+                registerForm.classList.add('active');
+                loginForm.classList.remove('active');
+            });
+            
+            // Обработчик формы входа
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = document.getElementById('loginUsername').value.trim();
+                const password = document.getElementById('loginPassword').value;
+                
+                if (loginUser(username, password)) {
+                    // Подключаемся к серверу
+                    connectToServer();
+                }
+            });
+            
+            // Обработчик формы регистрации
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = document.getElementById('registerUsername').value.trim();
+                const password = document.getElementById('registerPassword').value;
+                const confirmPassword = document.getElementById('registerConfirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    showNotification('Пароли не совпадают', 'error');
+                    return;
+                }
+                
+                if (registerUser(username, password)) {
+                    // Автоматически входим после регистрации
+                    if (loginUser(username, password)) {
+                        // Подключаемся к серверу
+                        connectToServer();
+                    }
+                }
+            });
+            
+            // Обработчик кнопки выхода
+            logoutBtn.addEventListener('click', logout);
+            
+            // Обработчик формы перевода
+            transferForm.addEventListener('submit', handleTransfer);
+            
+            // Обработчик кнопки кликера
+            clickerBtn.addEventListener('click', handleClickerClick);
+            
+            // Обработчик кнопки переподключения
+            reconnectBtn.addEventListener('click', connectToServer);
+            
+            // Обработчики переключения вкладок
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Проверяем, есть ли сохраненный URL сервера
+            if (savedServerUrl) {
+                // Автоматически проверяем доступность сервера
+                setTimeout(() => {
+                    checkServerAvailability();
+                }, 1000);
+            }
+        }
+        
+        // Запуск приложения при загрузке страницы
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
